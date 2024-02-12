@@ -228,8 +228,8 @@ public class logInFrame extends javax.swing.JFrame {
         // Check if the entered credentials are valid
             if(isLoginSuccessful(enteredUsername, enteredPassword)){
             JOptionPane.showMessageDialog(this, "Login successful!");
-            Dashboard dashBoardFrame = new Dashboard(this);
-            dashBoardFrame.setVisible(true);
+          
+          
             } 
             else{
             JOptionPane.showMessageDialog(this, "Incorrect username or password. Please try again.");
