@@ -7,6 +7,7 @@ package userAuth;
 
 import java.util.Map;
 import javax.swing.JOptionPane;
+import homePage.home;
 
 /**
  *
@@ -228,7 +229,8 @@ public class logInFrame extends javax.swing.JFrame {
         // Check if the entered credentials are valid
             if(isLoginSuccessful(enteredUsername, enteredPassword)){
             JOptionPane.showMessageDialog(this, "Login successful!");
-          
+            home homePage = new home(this);
+            homePage.setVisible(true);
           
             } 
             else{

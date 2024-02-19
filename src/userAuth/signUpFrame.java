@@ -2,6 +2,9 @@ package userAuth;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class signUpFrame extends javax.swing.JFrame {
     
@@ -204,24 +207,35 @@ public class signUpFrame extends javax.swing.JFrame {
     
     public void saveInfo(){
         String userName = signUserField.getText();
-        String password = signPassField.getText();
-        
-        if (!userName.isEmpty() && password.length() > 0) {
-            if (!registeredUsers.containsKey(userName)) {
-                registeredUsers.put(userName, String.valueOf(password));
+    String password = signPassField.getText();
+
+    if (!userName.isEmpty() && password.length() > 0) {
+        if (!registeredUsers.containsKey(userName)) {
+            registeredUsers.put(userName, String.valueOf(password));
+            try {
+                // Open file for writing
+                BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt", true));
+                // Write username and password to file
+                writer.write(userName + ":" + password);
+                writer.newLine();
+                // Close the writer
+                writer.close();
+                
                 JOptionPane.showMessageDialog(this, "Sign-up successful! You can now log in.");
                 logInFrame loginFrame = new logInFrame(this);
                 loginFrame.setVisible(true);
-            } 
-            else {
-                JOptionPane.showMessageDialog(this, "Username already exists. Please choose a different username.");
+            } catch (IOException e) {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error occurred while saving user information.");
             }
-        } 
-        else {
-            JOptionPane.showMessageDialog(this, "Username or password cannot be empty.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Username already exists. Please choose a different username.");
         }
-        signUserField.setText("");
-        signPassField.setText("");
+    } else {
+        JOptionPane.showMessageDialog(this, "Username or password cannot be empty.");
+    }
+    signUserField.setText("");
+    signPassField.setText("");
     }
     
     public Map<String, String> getUser(){

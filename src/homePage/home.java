@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package homePage;
+ 
+import userAuth.logInFrame;
 
 /**
  *
@@ -14,7 +16,9 @@ public class home extends javax.swing.JFrame {
     /**
      * Creates new form home
      */
-    public home() {
+    private logInFrame login;
+    public home(logInFrame login) {
+        this.login = login;
         initComponents();
     }
 
@@ -179,11 +183,7 @@ public class home extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new home().setVisible(true);
-            }
-        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
