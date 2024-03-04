@@ -4,18 +4,37 @@
  * and open the template in the editor.
  */
 package homePage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+
 
 /**
  *
  * @author sande
  */
-public class finance extends javax.swing.JFrame {
+public class finance extends javax.swing.JFrame{
 
     /**
      * Creates new form finance
      */
     public finance() {
         initComponents();
+        jButton6.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addExpenseButtonActionPerformed(e);
+                addIncomeButtonActionPerformed(e);
+            }
+        });
+        jButton7.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                addIncomeButtonActionPerformed(e);
+            }
+        });
     }
 
     /**
@@ -53,6 +72,8 @@ public class finance extends javax.swing.JFrame {
         jButton7 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable2 = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -102,7 +123,7 @@ public class finance extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(102, 102, 102));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel3.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel3.setBackground(new java.awt.Color(0, 204, 204));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -112,7 +133,7 @@ public class finance extends javax.swing.JFrame {
 
         jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 300, 60));
 
-        jPanel4.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel4.setBackground(new java.awt.Color(0, 255, 255));
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton2.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -122,7 +143,7 @@ public class finance extends javax.swing.JFrame {
 
         jPanel2.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 300, 60));
 
-        jPanel5.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel5.setBackground(new java.awt.Color(0, 255, 255));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -165,6 +186,11 @@ public class finance extends javax.swing.JFrame {
 
         jButton6.setBackground(new java.awt.Color(0, 102, 102));
         jButton6.setText("Add Expenses");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
         getContentPane().add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 255, 160, 30));
 
         jButton7.setBackground(new java.awt.Color(0, 51, 51));
@@ -174,44 +200,65 @@ public class finance extends javax.swing.JFrame {
         jTable1.setBackground(new java.awt.Color(255, 255, 153));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+
             },
             new String [] {
-                "                         Add Expenses", "                         Add Income"
+                "                         Add Expense", "Amount"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+        }
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 340, 530, 450));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 350, 530, 160));
+
+        jTable2.setBackground(new java.awt.Color(255, 255, 153));
+        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "                         Add Income", "Amount"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable2);
+        if (jTable2.getColumnModel().getColumnCount() > 0) {
+            jTable2.getColumnModel().getColumn(1).setResizable(false);
+        }
+
+        getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 580, 530, 160));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
+    private void addExpenseButtonActionPerformed(ActionEvent e) {
+        // Prompt the user to enter expense type and amount
+        String expenseType = JOptionPane.showInputDialog(this, "Enter Expense Type:");
+        String amountStr = JOptionPane.showInputDialog(this, "Enter Amount:");
+
+        // Convert amount to double
+        double amount = Double.parseDouble(amountStr);
+
+        // Add expense to the table
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.addRow(new Object[]{expenseType, amount});
+    }
+    private void addIncomeButtonActionPerformed(ActionEvent e) {
+        // Prompt the user to enter income type and amount
+        String incomeType = JOptionPane.showInputDialog(this, "Enter Income Type:");
+        String amountStr = JOptionPane.showInputDialog(this, "Enter Amount:");
+
+        // Convert amount to double
+        double amount = Double.parseDouble(amountStr);
+
+        // Add income to the table
+        DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        model.addRow(new Object[]{incomeType, amount});
+    }
     /**
      * @param args the command line arguments
      */
@@ -273,6 +320,8 @@ public class finance extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTable2;
     // End of variables declaration//GEN-END:variables
 }

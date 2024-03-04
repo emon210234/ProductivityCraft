@@ -9,9 +9,10 @@ import java.io.IOException;
 public class signUpFrame extends javax.swing.JFrame {
     
     private Map<String, String> registeredUsers;
-    
+    private logInFrame loginFrame;
     public signUpFrame() {
         initComponents();
+        loginFrame = new logInFrame(this);
         registeredUsers = new HashMap<>();
     }
     
@@ -222,16 +223,18 @@ public class signUpFrame extends javax.swing.JFrame {
                 writer.close();
                 
                 JOptionPane.showMessageDialog(this, "Sign-up successful! You can now log in.");
-                logInFrame loginFrame = new logInFrame(this);
-                loginFrame.setVisible(true);
+                 this.dispose();
+                 
             } catch (IOException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(this, "Error occurred while saving user information.");
             }
-        } else {
+        } 
+        else {
             JOptionPane.showMessageDialog(this, "Username already exists. Please choose a different username.");
         }
-    } else {
+    } 
+    else {
         JOptionPane.showMessageDialog(this, "Username or password cannot be empty.");
     }
     signUserField.setText("");
@@ -269,11 +272,7 @@ public class signUpFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new signUpFrame().setVisible(true);
-            }
-        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

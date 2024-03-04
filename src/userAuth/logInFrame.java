@@ -8,6 +8,9 @@ package userAuth;
 import java.util.Map;
 import javax.swing.JOptionPane;
 import homePage.home;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  *
@@ -18,10 +21,10 @@ public class logInFrame extends javax.swing.JFrame {
     /**
      * Creates new form logInFrame
      */
-    private signUpFrame signupFrame;
+    private signUpFrame signUpPage; 
     
-    public logInFrame(signUpFrame signupFrame) {
-        this.signupFrame = signupFrame;
+    public logInFrame(signUpFrame signUpPage) {
+        this.signUpPage = signUpPage;
         initComponents();
     }
 
@@ -215,43 +218,59 @@ public class logInFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_logExitButtonActionPerformed
 
     private void logButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logButtonActionPerformed
-        // TODO add your handling code here:
         String enteredUsername = logUserField.getText();
-        String enteredPassword = logPassField.getText();
-        
-        if (enteredUsername.equals("")) {
+    String enteredPassword = logPassField.getText();
+
+    if (enteredUsername.equals("")) {
         JOptionPane.showMessageDialog(this, "Enter Username");
-        }
-        else if (enteredPassword.equals("")) {
+    } else if (enteredPassword.equals("")) {
         JOptionPane.showMessageDialog(this, "Enter Password");
-        } 
-        else {
+    } else {
         // Check if the entered credentials are valid
-            if(isLoginSuccessful(enteredUsername, enteredPassword)){
+        if (isLoginSuccessful(enteredUsername, enteredPassword)) {
             JOptionPane.showMessageDialog(this, "Login successful!");
             home homePage = new home(this);
             homePage.setVisible(true);
-          
-            } 
-            else{
-            JOptionPane.showMessageDialog(this, "Incorrect username or password. Please try again.");
-            }
+        } else {
+            JOptionPane.showMessageDialog(this, "User not found. Redirecting to sign-up page.");
+            
+            signUpPage.setVisible(true);
+
         }
+    }
     }//GEN-LAST:event_logButtonActionPerformed
 
     private void logPassFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logPassFieldActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_logPassFieldActionPerformed
     private boolean isLoginSuccessful(String enteredUsername, String enteredPassword){
-    // Use the registeredUsers map to check if the entered credentials are valid
-    Map<String, String> registeredUsers = signupFrame.getUser();
-    return registeredUsers.containsKey(enteredUsername) &&
-           registeredUsers.get(enteredUsername).equals(enteredPassword);
+    try (BufferedReader reader = new BufferedReader(new FileReader("users.txt"))) {
+        String line;
+        boolean userFound = false;
+        while ((line = reader.readLine()) != null) {
+            String[] parts = line.split(":");
+            if (parts.length >= 2) {
+                String usernameFromFile = parts[0];
+                String passwordFromFile = parts[1];
+                if (usernameFromFile.equals(enteredUsername) && passwordFromFile.equals(enteredPassword)) {
+                    userFound = true;
+                    break;
+                }
+            }
+        }
+        return userFound;
+    } catch (IOException e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error occurred while reading user information.");
+        return false;
+    }
     }
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
+        signUpFrame signUpPage = new signUpFrame();
+        logInFrame loginFrameInstance = new logInFrame(signUpPage);
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -274,9 +293,14 @@ public class logInFrame extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(logInFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
         /* Create and display the form */
         
+        java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+             loginFrameInstance.setVisible(true);
+        }
+    });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
