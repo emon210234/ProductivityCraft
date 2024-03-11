@@ -7,7 +7,7 @@ package userAuth;
 
 import java.util.Map;
 import javax.swing.JOptionPane;
-import homePage.home;
+import mainWindow.Dashboard;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class logInFrame extends javax.swing.JFrame {
      * Creates new form logInFrame
      */
     private signUpFrame signUpPage; 
-    
+    private String user;
     public logInFrame(signUpFrame signUpPage) {
         this.signUpPage = signUpPage;
         initComponents();
@@ -229,8 +229,9 @@ public class logInFrame extends javax.swing.JFrame {
         // Check if the entered credentials are valid
         if (isLoginSuccessful(enteredUsername, enteredPassword)) {
             JOptionPane.showMessageDialog(this, "Login successful!");
-            home homePage = new home(this);
-            homePage.setVisible(true);
+            user = enteredUsername;
+            Dashboard dash = new Dashboard(user);
+            dash.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this, "User not found. Redirecting to sign-up page.");
             
@@ -268,6 +269,9 @@ public class logInFrame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
+    public String getUserName(String user){
+        return user;
+    }
     public static void main(String args[]) {
         signUpFrame signUpPage = new signUpFrame();
         logInFrame loginFrameInstance = new logInFrame(signUpPage);

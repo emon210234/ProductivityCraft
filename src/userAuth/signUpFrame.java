@@ -10,7 +10,7 @@ public class signUpFrame extends javax.swing.JFrame {
     
     private Map<String, String> registeredUsers;
     private logInFrame loginFrame;
-    public signUpFrame() {
+    public signUpFrame(){
         initComponents();
         loginFrame = new logInFrame(this);
         registeredUsers = new HashMap<>();
