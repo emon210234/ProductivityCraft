@@ -2,12 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/Productivity/ProductivityCraft/src/userAuth/logInFrame.java</file>
-            <file>file:/D:/Productivity/ProductivityCraft/src/mainWindow/Dashboard.java</file>
-            <file>file:/D:/Productivity/ProductivityCraft/src/coreFunctions/taskManagement.java</file>
-            <file>file:/D:/Productivity/ProductivityCraft/src/coreFunctions/pomodoro.java</file>
-            <file>file:/D:/Productivity/ProductivityCraft/src/coreFunctions/budgetTrack.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

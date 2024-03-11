@@ -1,5 +1,4 @@
 package coreFunctions;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -14,6 +13,8 @@ public class budgetTrack extends JPanel {
     private DefaultTableModel expenseTableModel;
     private JTable incomeTable;
     private JTable expenseTable;
+    private JLabel totalIncomeLabel;
+    private JLabel totalExpenseLabel;
     private final String INCOME_FILE_PATH = "income.txt";
     private final String EXPENSE_FILE_PATH = "expenses.txt";
 
@@ -106,11 +107,20 @@ public class budgetTrack extends JPanel {
         mainPanel.add(incomePanel, BorderLayout.WEST);
         mainPanel.add(expensePanel, BorderLayout.EAST);
 
+        // Add total income and total expense labels
+        totalIncomeLabel = new JLabel("Total Income: 0");
+        totalExpenseLabel = new JLabel("Total Expense: 0");
+        JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        totalPanel.add(totalIncomeLabel);
+        totalPanel.add(totalExpenseLabel);
+        mainPanel.add(totalPanel, BorderLayout.SOUTH);
+
         add(mainPanel);
 
         // Load data from files
         loadIncomeData();
         loadExpenseData();
+        updateTotalLabels();
     }
 
     private void handleAddButton(DefaultTableModel tableModel) {
@@ -120,6 +130,7 @@ public class budgetTrack extends JPanel {
             Object[] newRow = {type, amount};
             tableModel.addRow(newRow);
             saveData(tableModel); // Save data to file
+            updateTotalLabels();
         } else {
             JOptionPane.showMessageDialog(budgetTrack.this, "Please enter valid type and amount.");
         }
@@ -136,6 +147,7 @@ public class budgetTrack extends JPanel {
                 tableModel.setValueAt(type, selectedRow, 0);
                 tableModel.setValueAt(amount, selectedRow, 1);
                 saveData(tableModel); // Save data to file
+                updateTotalLabels();
             } else {
                 JOptionPane.showMessageDialog(budgetTrack.this, "Please enter valid type and amount.");
             }
@@ -182,8 +194,28 @@ public class budgetTrack extends JPanel {
             e.printStackTrace();
         }
     }
-    
-    
+
+    private void updateTotalLabels() {
+        double totalIncome = calculateTotal(incomeTableModel);
+        double totalExpense = calculateTotal(expenseTableModel);
+        totalIncomeLabel.setText("Total Income: " + totalIncome);
+        totalExpenseLabel.setText("Total Expense: " + totalExpense);
+    }
+
+    private double calculateTotal(DefaultTableModel tableModel) {
+        double total = 0;
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String amountStr = (String) tableModel.getValueAt(i, 1);
+            try {
+                double amount = Double.parseDouble(amountStr);
+                total += amount;
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+        return total;
+    }
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("Budget Tracking");
         budgetTrack tracker = new budgetTrack(); // Create an instance of budgetTrack
