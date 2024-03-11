@@ -1,5 +1,4 @@
 package coreFunctions;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -23,13 +22,26 @@ public class pomodoro extends JPanel implements ActionListener {
         pauseButton = new JButton("Pause");
         resetButton = new JButton("Reset");
 
+        // Set custom colors for buttons
+        startButton.setBackground(Color.GREEN);
+        pauseButton.setBackground(Color.YELLOW);
+        resetButton.setBackground(Color.RED);
+
+        // Set custom font color for timer label
+        timerLabel.setForeground(Color.BLACK);
+        timerLabel.setFont(new Font("Tahoma", Font.BOLD, 36)); // Set font size to 36 and bold
+        // Set custom font color for text fields
+        workDurationField = new JTextField("25");
+        workDurationField.setForeground(Color.BLACK);
+        breakDurationField = new JTextField("5");
+        breakDurationField.setForeground(Color.BLACK);
+
+        // Add action listeners
         startButton.addActionListener(this);
         pauseButton.addActionListener(this);
         resetButton.addActionListener(this);
 
-        workDurationField = new JTextField("25");
-        breakDurationField = new JTextField("5");
-
+        // Create control panel for buttons
         JPanel controlPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -41,6 +53,7 @@ public class pomodoro extends JPanel implements ActionListener {
         gbc.gridx++;
         controlPanel.add(resetButton, gbc);
 
+        // Create duration panel for text fields
         JPanel durationPanel = new JPanel(new GridBagLayout());
         gbc.gridy = 0;
         // Modify GridBagConstraints for components in durationPanel
@@ -55,6 +68,7 @@ public class pomodoro extends JPanel implements ActionListener {
         gbc.gridx++; // Move to next grid position for text field
         durationPanel.add(breakDurationField, gbc);
 
+        // Set layout and add components
         setLayout(new GridBagLayout());
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -66,113 +80,113 @@ public class pomodoro extends JPanel implements ActionListener {
         add(durationPanel, gbc);
     }
 
-   @Override
+    @Override
     public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == startButton) {
-        int workMinutes = Integer.parseInt(workDurationField.getText());
-        int breakMinutes = Integer.parseInt(breakDurationField.getText());
-        
-        if (timerThread == null || !timerThread.isAlive()) {
-            timerThread = new TimerThread(timerLabel, workMinutes, breakMinutes);
-            timerThread.start();
-        } else if (timerThread.isPaused()) {
-            timerThread.resumeTimer(); // Resume the timer if paused
+        if (e.getSource() == startButton) {
+            int workMinutes = Integer.parseInt(workDurationField.getText());
+            int breakMinutes = Integer.parseInt(breakDurationField.getText());
+
+            if (timerThread == null || !timerThread.isAlive()) {
+                timerThread = new TimerThread(timerLabel, workMinutes, breakMinutes);
+                timerThread.start();
+            } else if (timerThread.isPaused()) {
+                timerThread.resumeTimer(); // Resume the timer if paused
+            }
+        } else if (e.getSource() == pauseButton) {
+            if (timerThread != null && timerThread.isAlive()) {
+                timerThread.pauseTimer();
+            }
+        } else if (e.getSource() == resetButton) {
+            if (timerThread != null && timerThread.isAlive()) {
+                timerThread.resetTimer();
+            }
         }
-    } else if (e.getSource() == pauseButton) {
-        if (timerThread != null && timerThread.isAlive()) {
-            timerThread.pauseTimer();
-        }
-    } else if (e.getSource() == resetButton) {
-        if (timerThread != null && timerThread.isAlive()) {
-            timerThread.resetTimer();
-        }
-    }
     }
 
     private static class TimerThread extends Thread {
-    private JLabel timerLabel;
-    private int minutes;
-    private int seconds;
-    private boolean running;
-    private boolean paused; // New flag to indicate pause
-    private int workMinutes;
-    private int breakMinutes;
-    private boolean isWorkTimer;
+        private JLabel timerLabel;
+        private int minutes;
+        private int seconds;
+        private boolean running;
+        private boolean paused; // New flag to indicate pause
+        private int workMinutes;
+        private int breakMinutes;
+        private boolean isWorkTimer;
 
-    public TimerThread(JLabel timerLabel, int workMinutes, int breakMinutes) {
-        this.timerLabel = timerLabel;
-        this.workMinutes = workMinutes;
-        this.breakMinutes = breakMinutes;
-        this.timerLabel = timerLabel;
-        this.minutes = workMinutes;
-        this.seconds = 0;
-        this.running = true;
-        this.paused = false; // Initialize pause flag
-    }
-    public boolean isPaused() {
-    return paused;
-    }
+        public TimerThread(JLabel timerLabel, int workMinutes, int breakMinutes) {
+            this.timerLabel = timerLabel;
+            this.workMinutes = workMinutes;
+            this.breakMinutes = breakMinutes;
+            this.timerLabel = timerLabel;
+            this.minutes = workMinutes;
+            this.seconds = 0;
+            this.running = true;
+            this.paused = false; // Initialize pause flag
+        }
 
-    @Override
-public void run() {
-    while (running) {
-        try {
-            sleep(1000);
-            if (!paused) {
-                if (seconds == 0) {
-                    if (minutes == 0) {
-                        if (isWorkTimer) {
-                            isWorkTimer = false;
-                            minutes = breakMinutes;
+        public boolean isPaused() {
+            return paused;
+        }
+
+        @Override
+        public void run() {
+            while (running) {
+                try {
+                    sleep(1000);
+                    if (!paused) {
+                        if (seconds == 0) {
+                            if (minutes == 0) {
+                                if (isWorkTimer) {
+                                    isWorkTimer = false;
+                                    minutes = breakMinutes;
+                                } else {
+                                    isWorkTimer = true;
+                                    minutes = workMinutes;
+                                }
+                                seconds = 0;
+                            } else {
+                                minutes--;
+                                seconds = 59;
+                            }
                         } else {
-                            isWorkTimer = true;
-                            minutes = workMinutes;
+                            seconds--;
                         }
-                        seconds = 0;
-                    } else {
-                        minutes--;
-                        seconds = 59;
                     }
-                } else {
-                    seconds--;
+                    updateTimerLabel();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
+        }
+
+        public void setWorkMinutes(int workMinutes) {
+            this.workMinutes = workMinutes;
+        }
+
+        public void setBreakMinutes(int breakMinutes) {
+            this.breakMinutes = breakMinutes;
+        }
+
+        private void updateTimerLabel() {
+            String minString = (minutes < 10) ? "0" + minutes : String.valueOf(minutes);
+            String secString = (seconds < 10) ? "0" + seconds : String.valueOf(seconds);
+            timerLabel.setText(minString + ":" + secString);
+        }
+
+        public void pauseTimer() {
+            paused = true; // Set pause flag
+        }
+
+        public void resumeTimer() {
+            paused = false; // Clear pause flag
+        }
+
+        public void resetTimer() {
+            minutes = workMinutes;
+            seconds = 0;
+            paused = false; // Reset pause flag
+            running = true;
             updateTimerLabel();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
-}
-
-public void setWorkMinutes(int workMinutes) {
-    this.workMinutes = workMinutes;
-}
-
-public void setBreakMinutes(int breakMinutes) {
-    this.breakMinutes = breakMinutes;
-}
-
-    private void updateTimerLabel() {
-        String minString = (minutes < 10) ? "0" + minutes : String.valueOf(minutes);
-        String secString = (seconds < 10) ? "0" + seconds : String.valueOf(seconds);
-        timerLabel.setText(minString + ":" + secString);
-    }
-
-    public void pauseTimer() {
-        paused = true; // Set pause flag
-    }
-
-    public void resumeTimer() {
-        paused = false; // Clear pause flag
-    }
-
-    public void resetTimer() {
-        minutes = workMinutes;
-        seconds = 0;
-        paused = false; // Reset pause flag
-        running = true;
-        updateTimerLabel();
-    }
-   }
-
 }

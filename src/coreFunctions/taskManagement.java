@@ -1,6 +1,4 @@
-// Modified taskManagement class with additional column for estimated task time
 package coreFunctions;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -26,11 +24,12 @@ public class taskManagement extends JPanel {
     private JButton deleteButton;
     private JButton sortButton;
     private JButton start;
-    pomodoro pomodoro;
     private final String FILE_PATH = "tasks.txt";
 
     public taskManagement() {
         setLayout(new BorderLayout());
+        setBackground(new Color(255, 220, 220)); // Set background color of the main panel
+
         // Create table model with columns
         String[] columns = {"Task Name", "Time", "Date", "Time Remaining", "Estimated Time"};
         tableModel = new DefaultTableModel(columns, 0);
@@ -44,12 +43,19 @@ public class taskManagement extends JPanel {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 setHorizontalAlignment(JLabel.LEFT);
+                setFont(getFont().deriveFont(Font.BOLD, 16)); // Set font size to 16 and bold
                 return this;
             }
         });
 
+        // Set background color of the table
+        taskTable.setBackground(new Color(220, 255, 220));
+        JTableHeader header = taskTable.getTableHeader();
+        header.setFont(new Font("Arial", Font.BOLD, 16));
+
         // Add table to scroll pane for scrolling if required
         JScrollPane scrollPane = new JScrollPane(taskTable);
+        scrollPane.setBackground(new Color(220, 255, 220)); // Set background color of the scroll pane
         add(scrollPane, BorderLayout.CENTER);
 
         // Create buttons for add, delete, and sort operations
@@ -60,11 +66,18 @@ public class taskManagement extends JPanel {
 
         // Add buttons to panel
         JPanel buttonPanel = new JPanel();
+        buttonPanel.setBackground(new Color(220, 220, 255)); // Set background color of the button panel
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(sortButton);
         buttonPanel.add(start);
         add(buttonPanel, BorderLayout.SOUTH);
+
+        // Set button colors
+        addButton.setBackground(new Color(255, 165, 0));
+        deleteButton.setBackground(new Color(255, 0, 0));
+        sortButton.setBackground(new Color(0, 191, 255));
+        start.setBackground(new Color(255, 140, 0));
 
         // Implement action listeners for buttons (add, delete, sort) - Placeholder logic
         addButton.addActionListener(new ActionListener() {
@@ -207,6 +220,13 @@ public class taskManagement extends JPanel {
     
     
     public static void main(String[] args) {
+        // Set the look and feel to Nimbus for a modern look
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         JFrame frame = new JFrame("Task Management Dashboard");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400); // Set initial size of the window

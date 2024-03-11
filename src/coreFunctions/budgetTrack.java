@@ -5,6 +5,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
 
 public class budgetTrack extends JPanel {
@@ -45,36 +47,49 @@ public class budgetTrack extends JPanel {
         // Create buttons for income and expenses
         JButton incomeButton = new JButton("Income");
         JButton expenseButton = new JButton("Expense");
+        JButton editButton = new JButton("Edit");
+
+        // Increase font size for buttons
+        Font buttonFont = new Font("Arial", Font.BOLD, 14);
+        incomeButton.setFont(buttonFont);
+        expenseButton.setFont(buttonFont);
+        editButton.setFont(buttonFont);
 
         // Add action listeners to the buttons
         incomeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add functionality to handle income button click
-                String type = JOptionPane.showInputDialog("Enter Income Type:");
-                String amount = JOptionPane.showInputDialog("Enter Income Amount:");
-                if (type != null && amount != null && !type.isEmpty() && !amount.isEmpty()) {
-                    Object[] newRow = {type, amount};
-                    incomeTableModel.addRow(newRow);
-                    saveIncomeData(); // Save income data to file
-                } else {
-                    JOptionPane.showMessageDialog(budgetTrack.this, "Please enter valid type and amount.");
-                }
+                handleAddButton(incomeTableModel);
             }
         });
 
         expenseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Add functionality to handle expense button click
-                String type = JOptionPane.showInputDialog("Enter Expense Type:");
-                String amount = JOptionPane.showInputDialog("Enter Expense Amount:");
-                if (type != null && amount != null && !type.isEmpty() && !amount.isEmpty()) {
-                    Object[] newRow = {type, amount};
-                    expenseTableModel.addRow(newRow);
-                    saveExpenseData(); // Save expense data to file
-                } else {
-                    JOptionPane.showMessageDialog(budgetTrack.this, "Please enter valid type and amount.");
+                handleAddButton(expenseTableModel);
+            }
+        });
+
+        editButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                handleEditButton();
+            }
+        });
+
+        // Add mouse listener to tables to enable row selection
+        incomeTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    handleEditButton();
+                }
+            }
+        });
+
+        expenseTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    handleEditButton();
                 }
             }
         });
@@ -83,6 +98,7 @@ public class budgetTrack extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(incomeButton);
         buttonPanel.add(expenseButton);
+        buttonPanel.add(editButton);
 
         // Create main panel to hold both income and expense panels
         JPanel mainPanel = new JPanel(new BorderLayout());
@@ -95,69 +111,79 @@ public class budgetTrack extends JPanel {
         // Load data from files
         loadIncomeData();
         loadExpenseData();
-       
+    }
+
+    private void handleAddButton(DefaultTableModel tableModel) {
+        String type = JOptionPane.showInputDialog("Enter Type:");
+        String amount = JOptionPane.showInputDialog("Enter Amount:");
+        if (type != null && amount != null && !type.isEmpty() && !amount.isEmpty()) {
+            Object[] newRow = {type, amount};
+            tableModel.addRow(newRow);
+            saveData(tableModel); // Save data to file
+        } else {
+            JOptionPane.showMessageDialog(budgetTrack.this, "Please enter valid type and amount.");
+        }
+    }
+
+    private void handleEditButton() {
+        JTable table = incomeTable.getSelectedRowCount() > 0 ? incomeTable : expenseTable;
+        DefaultTableModel tableModel = table == incomeTable ? incomeTableModel : expenseTableModel;
+        int selectedRow = table.getSelectedRow();
+        if (selectedRow != -1) {
+            String type = JOptionPane.showInputDialog("Enter Type:", table.getValueAt(selectedRow, 0));
+            String amount = JOptionPane.showInputDialog("Enter Amount:", table.getValueAt(selectedRow, 1));
+            if (type != null && amount != null && !type.isEmpty() && !amount.isEmpty()) {
+                tableModel.setValueAt(type, selectedRow, 0);
+                tableModel.setValueAt(amount, selectedRow, 1);
+                saveData(tableModel); // Save data to file
+            } else {
+                JOptionPane.showMessageDialog(budgetTrack.this, "Please enter valid type and amount.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(budgetTrack.this, "Please select a row to edit.");
+        }
     }
 
     private void loadIncomeData() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(INCOME_FILE_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                incomeTableModel.addRow(data);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        loadData(INCOME_FILE_PATH, incomeTableModel);
     }
 
     private void loadExpenseData() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(EXPENSE_FILE_PATH))) {
+        loadData(EXPENSE_FILE_PATH, expenseTableModel);
+    }
+
+    private void saveData(DefaultTableModel tableModel) {
+        String filePath = (tableModel == incomeTableModel) ? INCOME_FILE_PATH : EXPENSE_FILE_PATH;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                StringBuilder line = new StringBuilder();
+                for (int j = 0; j < tableModel.getColumnCount(); j++) {
+                    line.append(tableModel.getValueAt(i, j));
+                    if (j < tableModel.getColumnCount() - 1) {
+                        line.append(",");
+                    }
+                }
+                writer.write(line.toString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadData(String filePath, DefaultTableModel tableModel) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] data = line.split(",");
-                expenseTableModel.addRow(data);
+                tableModel.addRow(data);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-    private void saveIncomeData() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(INCOME_FILE_PATH))) {
-            for (int i = 0; i < incomeTableModel.getRowCount(); i++) {
-                StringBuilder line = new StringBuilder();
-                for (int j = 0; j < incomeTableModel.getColumnCount(); j++) {
-                    line.append(incomeTableModel.getValueAt(i, j));
-                    if (j < incomeTableModel.getColumnCount() - 1) {
-                        line.append(",");
-                    }
-                }
-                writer.write(line.toString());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveExpenseData() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(EXPENSE_FILE_PATH))) {
-            for (int i = 0; i < expenseTableModel.getRowCount(); i++) {
-                StringBuilder line = new StringBuilder();
-                for (int j = 0; j < expenseTableModel.getColumnCount(); j++) {
-                    line.append(expenseTableModel.getValueAt(i, j));
-                    if (j < expenseTableModel.getColumnCount() - 1) {
-                        line.append(",");
-                    }
-                }
-                writer.write(line.toString());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    
+    
     public static void main(String[] args) {
         JFrame frame = new JFrame("Budget Tracking");
         budgetTrack tracker = new budgetTrack(); // Create an instance of budgetTrack
@@ -166,6 +192,4 @@ public class budgetTrack extends JPanel {
         frame.pack();
         frame.setVisible(true);
     }
-    
 }
-    

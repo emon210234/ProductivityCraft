@@ -69,9 +69,13 @@ public class Dashboard extends javax.swing.JFrame {
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addGap(175, 175, 175)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(473, Short.MAX_VALUE))
+                .addContainerGap(470, Short.MAX_VALUE))
         );
 
+        jMenu1.setBackground(new java.awt.Color(255, 204, 204));
+        jMenu1.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(204, 204, 255), new java.awt.Color(255, 204, 204)));
+        jMenu1.setForeground(new java.awt.Color(0, 255, 204));
+        jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/homeIcons/home_24px.png"))); // NOI18N
         jMenu1.setText("Home");
         jMenu1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jMenu1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -81,6 +85,7 @@ public class Dashboard extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu1);
 
+        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/homeIcons/promo_26x.png"))); // NOI18N
         jMenu2.setText("Pomodoro");
         jMenu2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jMenu2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -90,6 +95,7 @@ public class Dashboard extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu2);
 
+        jMenu3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/homeIcons/task.png"))); // NOI18N
         jMenu3.setText("Task Management");
         jMenu3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jMenu3.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -99,6 +105,7 @@ public class Dashboard extends javax.swing.JFrame {
         });
         jMenuBar1.add(jMenu3);
 
+        jMenu4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/homeIcons/Finance.png"))); // NOI18N
         jMenu4.setText("Budget Tracking");
         jMenu4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jMenu4.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -128,7 +135,7 @@ public class Dashboard extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-   
+    
     private void jMenu1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jMenu1MouseClicked
        
     }//GEN-LAST:event_jMenu1MouseClicked
