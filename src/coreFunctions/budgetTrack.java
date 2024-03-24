@@ -1,4 +1,5 @@
 package coreFunctions;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -18,149 +19,125 @@ public class budgetTrack extends JPanel {
     private final String INCOME_FILE_PATH = "income.txt";
     private final String EXPENSE_FILE_PATH = "expenses.txt";
 
-    public budgetTrack() {
-        // Initialize JPanel
+    public budgetTrack() {         //constructor (6 lines)
         super(new BorderLayout());
+        initializeTables();
+        initializeButtons();
+        initializeIncomePanels();
+        initializeExpensePanels();
+        loadDataFromFiles();
+        updateTotalLabels();
+    }
 
-        // Create income table
+    private void initializeTables() {         // Initializes the income and expense tables (6 lines)
         String[] incomeColumns = {"Type", "Amount"};
         incomeTableModel = new DefaultTableModel(incomeColumns, 0);
         incomeTable = new JTable(incomeTableModel);
 
-        // Create expense table
         String[] expenseColumns = {"Type", "Amount"};
         expenseTableModel = new DefaultTableModel(expenseColumns, 0);
         expenseTable = new JTable(expenseTableModel);
+    }
 
-        // Create scroll panes for tables
-        JScrollPane incomeScrollPane = new JScrollPane(incomeTable);
-        JScrollPane expenseScrollPane = new JScrollPane(expenseTable);
+    private void initializeButtons() {    //Creates and configures buttons for adding income, adding expense, and editing entries.(8 lines)
+        JButton incomeButton = createButton("Income", e -> handleAddButton(incomeTableModel));
+        JButton expenseButton = createButton("Expense", e -> handleAddButton(expenseTableModel));
+        JButton editButton = createButton("Edit", e -> handleEditButton());
 
-        // Create panels to hold tables
-        JPanel incomePanel = new JPanel(new BorderLayout());
-        incomePanel.setBorder(BorderFactory.createTitledBorder("Income"));
-        incomePanel.add(incomeScrollPane, BorderLayout.CENTER);
-
-        JPanel expensePanel = new JPanel(new BorderLayout());
-        expensePanel.setBorder(BorderFactory.createTitledBorder("Expenses"));
-        expensePanel.add(expenseScrollPane, BorderLayout.CENTER);
-
-        // Create buttons for income and expenses
-        JButton incomeButton = new JButton("Income");
-        JButton expenseButton = new JButton("Expense");
-        JButton editButton = new JButton("Edit");
-
-        // Increase font size for buttons
-        Font buttonFont = new Font("Arial", Font.BOLD, 14);
-        incomeButton.setFont(buttonFont);
-        expenseButton.setFont(buttonFont);
-        editButton.setFont(buttonFont);
-
-        // Add action listeners to the buttons
-        incomeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleAddButton(incomeTableModel);
-            }
-        });
-
-        expenseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleAddButton(expenseTableModel);
-            }
-        });
-
-        editButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleEditButton();
-            }
-        });
-
-        // Add mouse listener to tables to enable row selection
-        incomeTable.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    handleEditButton();
-                }
-            }
-        });
-
-        expenseTable.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
-                    handleEditButton();
-                }
-            }
-        });
-
-        // Create panel to hold buttons
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(incomeButton);
         buttonPanel.add(expenseButton);
         buttonPanel.add(editButton);
-
-        // Create main panel to hold both income and expense panels
-        JPanel mainPanel = new JPanel(new BorderLayout());
-        mainPanel.add(buttonPanel, BorderLayout.NORTH);
-        mainPanel.add(incomePanel, BorderLayout.WEST);
-        mainPanel.add(expensePanel, BorderLayout.EAST);
-
-        // Add total income and total expense labels
-        totalIncomeLabel = new JLabel("Total Income: 0");
-        totalExpenseLabel = new JLabel("Total Expense: 0");
-        JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        totalPanel.add(totalIncomeLabel);
-        totalPanel.add(totalExpenseLabel);
-        mainPanel.add(totalPanel, BorderLayout.SOUTH);
-
-        add(mainPanel);
-
-        // Load data from files
-        loadIncomeData();
-        loadExpenseData();
-        updateTotalLabels();
+        
+        add(buttonPanel, BorderLayout.NORTH);
     }
 
-    private void handleAddButton(DefaultTableModel tableModel) {
+    private JButton createButton(String label, ActionListener actionListener) { // Helper method to create a button with 
+        JButton button = new JButton(label);                                    // the specified label and action listener. (4 lines)
+        button.setFont(new Font("Arial", Font.BOLD, 14));
+        button.addActionListener(actionListener);
+        return button;
+    }
+
+    private void initializeIncomePanels() {                                     // interface for income panel (9 lines)
+        JScrollPane incomeScrollPane = new JScrollPane(incomeTable);
+        JPanel incomePanel = createPanelWithBorderLayout("Income", incomeScrollPane);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(incomePanel, BorderLayout.WEST);
+        add(mainPanel, BorderLayout.CENTER);
+        JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        totalIncomeLabel = new JLabel("Total Income: 0");
+        totalPanel.add(totalIncomeLabel);
+        mainPanel.add(totalPanel, BorderLayout.SOUTH);
+    }
+    private void initializeExpensePanels() {                                    // interface for income panel (9 lines)
+       
+        JScrollPane expenseScrollPane = new JScrollPane(expenseTable);
+        JPanel expensePanel = createPanelWithBorderLayout("Expenses", expenseScrollPane);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(expensePanel, BorderLayout.EAST);
+        add(mainPanel, BorderLayout.CENTER);
+        JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        totalExpenseLabel = new JLabel("Total Expense: 0");
+        totalPanel.add(totalExpenseLabel);
+        mainPanel.add(totalPanel, BorderLayout.SOUTH);
+    }
+    
+    private JPanel createPanelWithBorderLayout(String title, Component component) { //Helper method to create a panel with 
+        JPanel panel = new JPanel(new BorderLayout());                              //a titled border and BorderLayout layout.(4 lines)
+        panel.setBorder(BorderFactory.createTitledBorder(title));
+        panel.add(component, BorderLayout.CENTER);
+        return panel;
+    }
+
+    private void handleAddButton(DefaultTableModel tableModel) {                 //add button functionality
         String type = JOptionPane.showInputDialog("Enter Type:");
         String amount = JOptionPane.showInputDialog("Enter Amount:");
-        if (type != null && amount != null && !type.isEmpty() && !amount.isEmpty()) {
+        if (isValidInput(type) && isValidInput(amount)) {
             Object[] newRow = {type, amount};
             tableModel.addRow(newRow);
-            saveData(tableModel); // Save data to file
+            saveData(tableModel);
             updateTotalLabels();
         } else {
-            JOptionPane.showMessageDialog(budgetTrack.this, "Please enter valid type and amount.");
+            showMessageDialog("Please enter valid type and amount.");
         }
     }
 
-    private void handleEditButton() {
+    private boolean isValidInput(String input) {                                // check validity(1 line)
+        return input != null && !input.isEmpty();
+    }
+
+    private void handleEditButton() {                                           //declare necessary variables(4 lines)            
         JTable table = incomeTable.getSelectedRowCount() > 0 ? incomeTable : expenseTable;
         DefaultTableModel tableModel = table == incomeTable ? incomeTableModel : expenseTableModel;
         int selectedRow = table.getSelectedRow();
+        handleEditButtonFunction(selectedRow, tableModel, table);
+    }
+    
+    private void handleEditButtonFunction(int selectedRow, DefaultTableModel tableModel, JTable table){ // 
         if (selectedRow != -1) {
             String type = JOptionPane.showInputDialog("Enter Type:", table.getValueAt(selectedRow, 0));
             String amount = JOptionPane.showInputDialog("Enter Amount:", table.getValueAt(selectedRow, 1));
-            if (type != null && amount != null && !type.isEmpty() && !amount.isEmpty()) {
+            if (isValidInput(type) && isValidInput(amount)) {
                 tableModel.setValueAt(type, selectedRow, 0);
                 tableModel.setValueAt(amount, selectedRow, 1);
-                saveData(tableModel); // Save data to file
+                saveData(tableModel);
                 updateTotalLabels();
             } else {
-                JOptionPane.showMessageDialog(budgetTrack.this, "Please enter valid type and amount.");
+                showMessageDialog("Please enter valid type and amount.");
             }
-        } else {
-            JOptionPane.showMessageDialog(budgetTrack.this, "Please select a row to edit.");
+        } 
+        else {
+            showMessageDialog("Please select a row to edit.");
         }
     }
 
-    private void loadIncomeData() {
-        loadData(INCOME_FILE_PATH, incomeTableModel);
+    private void showMessageDialog(String message) {
+        JOptionPane.showMessageDialog(budgetTrack.this, message);
     }
 
-    private void loadExpenseData() {
+    private void loadDataFromFiles() {
+        loadData(INCOME_FILE_PATH, incomeTableModel);
         loadData(EXPENSE_FILE_PATH, expenseTableModel);
     }
 
@@ -196,10 +173,8 @@ public class budgetTrack extends JPanel {
     }
 
     private void updateTotalLabels() {
-        double totalIncome = calculateTotal(incomeTableModel);
-        double totalExpense = calculateTotal(expenseTableModel);
-        totalIncomeLabel.setText("Total Income: " + totalIncome);
-        totalExpenseLabel.setText("Total Expense: " + totalExpense);
+        totalIncomeLabel.setText("Total Income: " + calculateTotal(incomeTableModel));
+        totalExpenseLabel.setText("Total Expense: " + calculateTotal(expenseTableModel));
     }
 
     private double calculateTotal(DefaultTableModel tableModel) {
@@ -217,11 +192,13 @@ public class budgetTrack extends JPanel {
     }
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Budget Tracking");
-        budgetTrack tracker = new budgetTrack(); // Create an instance of budgetTrack
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(tracker); // Add budgetTrack instance to the frame's content pane
-        frame.pack();
-        frame.setVisible(true);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Budget Tracking");
+            budgetTrack tracker = new budgetTrack();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.getContentPane().add(tracker);
+            frame.pack();
+            frame.setVisible(true);
+        });
     }
 }
