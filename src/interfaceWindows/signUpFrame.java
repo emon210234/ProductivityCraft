@@ -1,15 +1,15 @@
-package userAuth;
+package interfaceWindows;
+import userAuth.signupController;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JOptionPane;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+
 
 public class signUpFrame extends javax.swing.JFrame {
     
     private Map<String, String> registeredUsers;
     private logInFrame loginFrame;
+    private signupController signupController;
     public signUpFrame(){
         initComponents();
         loginFrame = new logInFrame(this);
@@ -208,37 +208,22 @@ public class signUpFrame extends javax.swing.JFrame {
     
     public void saveInfo(){
         String userName = signUserField.getText();
-    String password = signPassField.getText();
+        String password = signPassField.getText();
 
-    if (!userName.isEmpty() && password.length() > 0) {
-        if (!registeredUsers.containsKey(userName)) {
-            registeredUsers.put(userName, String.valueOf(password));
-            try {
-                // Open file for writing
-                BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt", true));
-                // Write username and password to file
-                writer.write(userName + ":" + password);
-                writer.newLine();
-                // Close the writer
-                writer.close();
-                
+        if (!userName.isEmpty() && password.length() > 0) {
+            if (!registeredUsers.containsKey(userName)) {
+                registeredUsers.put(userName, String.valueOf(password));
+                signupController.saveUserInfo(userName, password); // Utilize FileHandler to save user info
                 JOptionPane.showMessageDialog(this, "Sign-up successful! You can now log in.");
-                 this.dispose();
-                 
-            } catch (IOException e) {
-                e.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error occurred while saving user information.");
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Username already exists. Please choose a different username.");
             }
-        } 
-        else {
-            JOptionPane.showMessageDialog(this, "Username already exists. Please choose a different username.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Username or password cannot be empty.");
         }
-    } 
-    else {
-        JOptionPane.showMessageDialog(this, "Username or password cannot be empty.");
-    }
-    signUserField.setText("");
-    signPassField.setText("");
+        signUserField.setText("");
+        signPassField.setText("");
     }
     
     public Map<String, String> getUser(){
@@ -281,14 +266,8 @@ public class signUpFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JButton signButton;
     private javax.swing.JButton signExitButton;

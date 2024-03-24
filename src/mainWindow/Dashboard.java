@@ -1,22 +1,11 @@
 package mainWindow;
+
 import coreFunctions.taskManagement;
 import coreFunctions.pomodoro;
 import coreFunctions.budgetTrack;
-
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+
 
 public class Dashboard extends javax.swing.JFrame {
    

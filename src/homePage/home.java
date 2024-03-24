@@ -5,7 +5,7 @@
  */
 package homePage;
  
-import userAuth.logInFrame;
+import interfaceWindows.logInFrame;
 
 /**
  *

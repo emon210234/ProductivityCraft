@@ -3,10 +3,7 @@ package coreFunctions;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.*;
 
 public class budgetTrack extends JPanel {
@@ -19,17 +16,16 @@ public class budgetTrack extends JPanel {
     private final String INCOME_FILE_PATH = "income.txt";
     private final String EXPENSE_FILE_PATH = "expenses.txt";
 
-    public budgetTrack() {         //constructor (6 lines)
+    public budgetTrack() {
         super(new BorderLayout());
         initializeTables();
         initializeButtons();
-        initializeIncomePanels();
-        initializeExpensePanels();
+        initializePanels();
         loadDataFromFiles();
         updateTotalLabels();
     }
 
-    private void initializeTables() {         // Initializes the income and expense tables (6 lines)
+    private void initializeTables() {
         String[] incomeColumns = {"Type", "Amount"};
         incomeTableModel = new DefaultTableModel(incomeColumns, 0);
         incomeTable = new JTable(incomeTableModel);
@@ -39,7 +35,7 @@ public class budgetTrack extends JPanel {
         expenseTable = new JTable(expenseTableModel);
     }
 
-    private void initializeButtons() {    //Creates and configures buttons for adding income, adding expense, and editing entries.(8 lines)
+    private void initializeButtons() {
         JButton incomeButton = createButton("Income", e -> handleAddButton(incomeTableModel));
         JButton expenseButton = createButton("Expense", e -> handleAddButton(expenseTableModel));
         JButton editButton = createButton("Edit", e -> handleEditButton());
@@ -52,45 +48,41 @@ public class budgetTrack extends JPanel {
         add(buttonPanel, BorderLayout.NORTH);
     }
 
-    private JButton createButton(String label, ActionListener actionListener) { // Helper method to create a button with 
-        JButton button = new JButton(label);                                    // the specified label and action listener. (4 lines)
+    private JButton createButton(String label, ActionListener actionListener) {
+        JButton button = new JButton(label);
         button.setFont(new Font("Arial", Font.BOLD, 14));
         button.addActionListener(actionListener);
         return button;
     }
 
-    private void initializeIncomePanels() {                                     // interface for income panel (9 lines)
+    private void initializePanels() {
         JScrollPane incomeScrollPane = new JScrollPane(incomeTable);
+        JScrollPane expenseScrollPane = new JScrollPane(expenseTable);
+
         JPanel incomePanel = createPanelWithBorderLayout("Income", incomeScrollPane);
+        JPanel expensePanel = createPanelWithBorderLayout("Expenses", expenseScrollPane);
+        
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(incomePanel, BorderLayout.WEST);
-        add(mainPanel, BorderLayout.CENTER);
-        JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        totalIncomeLabel = new JLabel("Total Income: 0");
-        totalPanel.add(totalIncomeLabel);
-        mainPanel.add(totalPanel, BorderLayout.SOUTH);
-    }
-    private void initializeExpensePanels() {                                    // interface for income panel (9 lines)
-       
-        JScrollPane expenseScrollPane = new JScrollPane(expenseTable);
-        JPanel expensePanel = createPanelWithBorderLayout("Expenses", expenseScrollPane);
-        JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.add(expensePanel, BorderLayout.EAST);
         add(mainPanel, BorderLayout.CENTER);
+
         JPanel totalPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        totalIncomeLabel = new JLabel("Total Income: 0");
         totalExpenseLabel = new JLabel("Total Expense: 0");
+        totalPanel.add(totalIncomeLabel);
         totalPanel.add(totalExpenseLabel);
         mainPanel.add(totalPanel, BorderLayout.SOUTH);
     }
-    
-    private JPanel createPanelWithBorderLayout(String title, Component component) { //Helper method to create a panel with 
-        JPanel panel = new JPanel(new BorderLayout());                              //a titled border and BorderLayout layout.(4 lines)
+
+    private JPanel createPanelWithBorderLayout(String title, Component component) {
+        JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createTitledBorder(title));
         panel.add(component, BorderLayout.CENTER);
         return panel;
     }
 
-    private void handleAddButton(DefaultTableModel tableModel) {                 //add button functionality
+    private void handleAddButton(DefaultTableModel tableModel) {
         String type = JOptionPane.showInputDialog("Enter Type:");
         String amount = JOptionPane.showInputDialog("Enter Amount:");
         if (isValidInput(type) && isValidInput(amount)) {
@@ -103,18 +95,14 @@ public class budgetTrack extends JPanel {
         }
     }
 
-    private boolean isValidInput(String input) {                                // check validity(1 line)
+    private boolean isValidInput(String input) {
         return input != null && !input.isEmpty();
     }
 
-    private void handleEditButton() {                                           //declare necessary variables(4 lines)            
+    private void handleEditButton() {
         JTable table = incomeTable.getSelectedRowCount() > 0 ? incomeTable : expenseTable;
         DefaultTableModel tableModel = table == incomeTable ? incomeTableModel : expenseTableModel;
         int selectedRow = table.getSelectedRow();
-        handleEditButtonFunction(selectedRow, tableModel, table);
-    }
-    
-    private void handleEditButtonFunction(int selectedRow, DefaultTableModel tableModel, JTable table){ // 
         if (selectedRow != -1) {
             String type = JOptionPane.showInputDialog("Enter Type:", table.getValueAt(selectedRow, 0));
             String amount = JOptionPane.showInputDialog("Enter Amount:", table.getValueAt(selectedRow, 1));
@@ -126,8 +114,7 @@ public class budgetTrack extends JPanel {
             } else {
                 showMessageDialog("Please enter valid type and amount.");
             }
-        } 
-        else {
+        } else {
             showMessageDialog("Please select a row to edit.");
         }
     }
