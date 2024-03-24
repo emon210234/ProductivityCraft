@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interfaceWindows;
 
 import userAuth.loginController;
@@ -223,7 +218,7 @@ public class logInFrame extends javax.swing.JFrame {
         else if (enteredPassword.equals("")) {
                 JOptionPane.showMessageDialog(this, "Enter Password");
             } else {
-                // Check if the entered credentials are valid using LoginController
+             
                 if (loginController.isLoginSuccessful(enteredUsername, enteredPassword)) {
                     JOptionPane.showMessageDialog(this, "Login successful!");
                     user = enteredUsername;

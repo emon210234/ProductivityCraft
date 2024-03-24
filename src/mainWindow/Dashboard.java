@@ -1,5 +1,6 @@
 package mainWindow;
 
+
 import coreFunctions.taskManagement;
 import coreFunctions.pomodoro;
 import coreFunctions.budgetTrack;
@@ -23,6 +24,7 @@ public class Dashboard extends javax.swing.JFrame {
         taskManagement = new taskManagement();
         tracker = new budgetTrack();
         pomodoro = new pomodoro();
+        
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
