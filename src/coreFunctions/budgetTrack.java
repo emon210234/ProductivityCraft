@@ -1,5 +1,6 @@
 package coreFunctions;
 
+import interfaceWindows.budgetTrackInterface;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -15,6 +16,7 @@ public class budgetTrack extends JPanel {
     private JLabel totalExpenseLabel;
     private final String INCOME_FILE_PATH = "income.txt";
     private final String EXPENSE_FILE_PATH = "expenses.txt";
+    private final budgetTrackInterface guiManager;
 
     public budgetTrack() {
         super(new BorderLayout());
@@ -23,6 +25,7 @@ public class budgetTrack extends JPanel {
         initializePanels();
         loadDataFromFiles();
         updateTotalLabels();
+        guiManager = new budgetTrackInterface();
     }
 
     private void initializeTables() {
@@ -36,9 +39,9 @@ public class budgetTrack extends JPanel {
     }
 
     private void initializeButtons() {
-        JButton incomeButton = createButton("Income", e -> handleAddButton(incomeTableModel));
-        JButton expenseButton = createButton("Expense", e -> handleAddButton(expenseTableModel));
-        JButton editButton = createButton("Edit", e -> handleEditButton());
+        JButton incomeButton = guiManager.createButton("Income", e -> handleAddButton(incomeTableModel));
+        JButton expenseButton = guiManager.createButton("Expense", e -> handleAddButton(expenseTableModel));
+        JButton editButton = guiManager.createButton("Edit", e -> handleEditButton());
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(incomeButton);

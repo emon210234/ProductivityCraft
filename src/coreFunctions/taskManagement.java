@@ -1,5 +1,6 @@
 package coreFunctions;
 
+import interfaceWindows.taskInterface;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
@@ -20,6 +21,7 @@ public class taskManagement extends JPanel {
     private JButton sortButton;
     private JButton start;
     private final String FILE_PATH = "tasks.txt";
+    private final taskInterface guiManager;
 
     public taskManagement() {
         setLayout(new BorderLayout());
@@ -29,6 +31,7 @@ public class taskManagement extends JPanel {
         createButtons();
         addActionListeners();
         loadTasksFromFile();
+        guiManager = new taskInterface();
     }
 
     private void createTableModel() {
@@ -57,17 +60,18 @@ public class taskManagement extends JPanel {
     }
 
     private void createButtons() {
-        addButton = new JButton("Add Task");
-        deleteButton = new JButton("Delete Task");
-        sortButton = new JButton("Sort by Time");
-        start = new JButton("Start Timer");
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setBackground(new Color(220, 220, 255));
+        addButton = guiManager.createButton("Add Task", e -> addTask());
+        deleteButton = guiManager.createButton("Delete Task", e -> deleteTask());
+        sortButton = guiManager.createButton("Sort by Time", e -> sortTasks());
+        start = guiManager.createButton("Start Timer", e -> fireTaskStartEvent(e));
+
+        JPanel buttonPanel = guiManager.createButtonPanel();
         buttonPanel.add(addButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(sortButton);
         buttonPanel.add(start);
         add(buttonPanel, BorderLayout.SOUTH);
+
         addButton.setBackground(new Color(255, 165, 0));
         deleteButton.setBackground(new Color(255, 0, 0));
         sortButton.setBackground(new Color(0, 191, 255));
