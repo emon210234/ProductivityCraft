@@ -1,5 +1,6 @@
 package coreFunctions;
 
+import dataAccess.budgetData;
 import interfaceWindows.budgetTrackInterface;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,15 +18,17 @@ public class budgetTrack extends JPanel {
     private final String INCOME_FILE_PATH = "income.txt";
     private final String EXPENSE_FILE_PATH = "expenses.txt";
     private final budgetTrackInterface guiManager;
+    private final budgetData fileHandler;
 
     public budgetTrack() {
         super(new BorderLayout());
         initializeTables();
         initializeButtons();
         initializePanels();
-        loadDataFromFiles();
         updateTotalLabels();
         guiManager = new budgetTrackInterface();
+        fileHandler = new budgetData();
+        fileHandler.loadData(incomeTableModel, INCOME_FILE_PATH);
     }
 
     private void initializeTables() {
@@ -126,40 +129,18 @@ public class budgetTrack extends JPanel {
         JOptionPane.showMessageDialog(budgetTrack.this, message);
     }
 
-    private void loadDataFromFiles() {
-        loadData(INCOME_FILE_PATH, incomeTableModel);
-        loadData(EXPENSE_FILE_PATH, expenseTableModel);
-    }
+   
 
     private void saveData(DefaultTableModel tableModel) {
-        String filePath = (tableModel == incomeTableModel) ? INCOME_FILE_PATH : EXPENSE_FILE_PATH;
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (int i = 0; i < tableModel.getRowCount(); i++) {
-                StringBuilder line = new StringBuilder();
-                for (int j = 0; j < tableModel.getColumnCount(); j++) {
-                    line.append(tableModel.getValueAt(i, j));
-                    if (j < tableModel.getColumnCount() - 1) {
-                        line.append(",");
-                    }
-                }
-                writer.write(line.toString());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (tableModel == incomeTableModel) {
+            fileHandler.saveData(tableModel, fileHandler.getIncomeFilePath());
+        } else {
+            fileHandler.saveData(tableModel, fileHandler.getExpenseFilePath());
         }
     }
 
     private void loadData(String filePath, DefaultTableModel tableModel) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                tableModel.addRow(data);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileHandler.loadData(tableModel, filePath);
     }
 
     private void updateTotalLabels() {

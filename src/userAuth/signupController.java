@@ -1,19 +1,15 @@
 package userAuth;
 
+import dataAccess.userFile;
 import java.io.*;
 public class signupController {
+    private final userFile fileHandler;
+    
+    public signupController(){
+        fileHandler = new userFile();
+    }
+    
     public void saveUserInfo(String userName, String password) {
-        try {
-            // Open file for writing
-            BufferedWriter writer = new BufferedWriter(new FileWriter("users.txt", true));
-            // Write username and password to file
-            writer.write(userName + ":" + password);
-            writer.newLine();
-            // Close the writer
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle exception
-        }
+        fileHandler.saveUserInfo(userName, password);
     }
 }

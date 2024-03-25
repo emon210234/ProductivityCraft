@@ -1,5 +1,6 @@
 package coreFunctions;
 
+import dataAccess.taskData;
 import interfaceWindows.taskInterface;
 import javax.swing.*;
 import javax.swing.table.*;
@@ -22,6 +23,7 @@ public class taskManagement extends JPanel {
     private JButton start;
     private final String FILE_PATH = "tasks.txt";
     private final taskInterface guiManager;
+    private final taskData fileHandler;
 
     public taskManagement() {
         setLayout(new BorderLayout());
@@ -32,6 +34,7 @@ public class taskManagement extends JPanel {
         addActionListeners();
         loadTasksFromFile();
         guiManager = new taskInterface();
+        fileHandler = new taskData();
     }
 
     private void createTableModel() {
@@ -130,21 +133,7 @@ public class taskManagement extends JPanel {
     }
 
     private void saveTasksToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
-            for (int i = 0; i < tableModel.getRowCount(); i++) {
-                StringBuilder line = new StringBuilder();
-                for (int j = 0; j < tableModel.getColumnCount(); j++) {
-                    line.append(tableModel.getValueAt(i, j));
-                    if (j < tableModel.getColumnCount() - 1) {
-                        line.append(",");
-                    }
-                }
-                writer.write(line.toString());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileHandler.saveData(tableModel, FILE_PATH); // Use the file handling class to save data
     }
 
     public int getSelectedTaskEstimatedTime() {
@@ -179,19 +168,7 @@ public class taskManagement extends JPanel {
     }
 
     private void loadTasksFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_PATH))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == tableModel.getColumnCount()) {
-                    tableModel.addRow(parts);
-                } else {
-                    System.err.println("Invalid data format in the file: " + line);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        fileHandler.loadData(tableModel, FILE_PATH); // Use the file handling class to load data
     }
 
     public static void main(String[] args) {
