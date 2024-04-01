@@ -148,7 +148,7 @@ public class budgetTrack extends JPanel {
         totalExpenseLabel.setText("Total Expense: " + calculateTotal(expenseTableModel));
     }
 
-    private double calculateTotal(DefaultTableModel tableModel) {
+    public double calculateTotal(DefaultTableModel tableModel) {
         double total = 0;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             String amountStr = (String) tableModel.getValueAt(i, 1);
