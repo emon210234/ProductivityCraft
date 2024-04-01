@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class taskManagement extends JPanel {
 
     private ActionListener taskStartListener;
-    private DefaultTableModel tableModel;
+    public DefaultTableModel tableModel;
     private JTable taskTable;
     private JButton addButton;
     private JButton deleteButton;
@@ -92,6 +92,12 @@ public class taskManagement extends JPanel {
         String time = JOptionPane.showInputDialog("Enter Time (HH:mm):");
         String date = JOptionPane.showInputDialog("Enter Date (dd/MM/yyyy):");
         String estimatedTime = JOptionPane.showInputDialog("Enter Estimated Time (minutes):");
+        Object[] newRow = {taskName, time, date, calculateTimeRemaining(time, date), estimatedTime};
+        tableModel.addRow(newRow);
+        saveTasksToFile();
+    }
+    
+    public void addTask(String taskName, String time, String date, String estimatedTime) {
         Object[] newRow = {taskName, time, date, calculateTimeRemaining(time, date), estimatedTime};
         tableModel.addRow(newRow);
         saveTasksToFile();
