@@ -4,7 +4,6 @@ import interfaceWindows.pomodoroInterface;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JTextField;
@@ -52,7 +51,7 @@ public class pomodoro extends JPanel implements ActionListener {
         }
     }
 
-    private void handleStartButtonAction() {
+    public void handleStartButtonAction() {
         int workMinutes = Integer.parseInt(workDurationField.getText());
         int breakMinutes = Integer.parseInt(breakDurationField.getText());
         startTimer(workMinutes, breakMinutes);
@@ -67,13 +66,13 @@ public class pomodoro extends JPanel implements ActionListener {
         }
     }
 
-    private void handlePauseButtonAction() {
+    public void handlePauseButtonAction() {
         if (timerThread != null && timerThread.isAlive()) {
             timerThread.pauseTimer();
         }
     }
 
-    private void handleResetButtonAction() {
+    public void handleResetButtonAction() {
         if (timerThread != null && timerThread.isAlive()) {
             timerThread.resetTimer();
         }
@@ -164,6 +163,13 @@ public class pomodoro extends JPanel implements ActionListener {
             running = true;
             updateTimerLabel();
         }
+    }
+    public boolean isTimerThreadAlive() {
+        return timerThread != null && timerThread.isAlive();
+    }
+
+    public boolean isTimerThreadPaused() {
+        return timerThread != null && timerThread.isPaused();
     }
     
 }
