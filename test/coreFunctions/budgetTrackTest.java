@@ -32,7 +32,29 @@ public class budgetTrackTest {
 
         assertEquals(expectedExpenseTotal, actualExpenseTotal, 0.001);
     }
+    
+    //new
+    public void testAddData() {
+        // Creating an instance of budgetTrack
+        budgetTrack budgetTracker = new budgetTrack();
 
+        // Adding test data
+        String type = "Salary";
+        double amount = 2500.0;
+        boolean isIncome = true;
+
+        // Adding data using addData method
+        budgetTracker.addData(type, amount, isIncome);
+
+        // Retrieving the income table model
+        DefaultTableModel incomeTableModel = budgetTracker.getIncomeTableModel();
+
+        // Verifying the data added to the income table
+        assertEquals(1, incomeTableModel.getRowCount()); // Expecting one row
+        assertEquals(type, incomeTableModel.getValueAt(0, 0)); // Expecting type at first column
+        assertEquals(amount, Double.parseDouble((String) incomeTableModel.getValueAt(0, 1)), 0.001); // Expecting amount at second column
+    }
+    
     @Test
     public void testMain() {
         System.out.println("main");

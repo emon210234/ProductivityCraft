@@ -147,7 +147,23 @@ public class budgetTrack extends JPanel {
         totalIncomeLabel.setText("Total Income: " + calculateTotal(incomeTableModel));
         totalExpenseLabel.setText("Total Expense: " + calculateTotal(expenseTableModel));
     }
+    
+    public void addData(String type, double amount, boolean isIncome) {
+        DefaultTableModel tableModel = isIncome ? incomeTableModel : expenseTableModel;
+        Object[] newRow = {type, amount};
+        tableModel.addRow(newRow);
+        saveData(tableModel);
+        updateTotalLabels();
+    }
+    
+    public DefaultTableModel getIncomeTableModel() {
+        return incomeTableModel;
+    }
 
+    public DefaultTableModel getExpenseTableModel() {
+        return expenseTableModel;
+    }
+    
     public double calculateTotal(DefaultTableModel tableModel) {
         double total = 0;
         for (int i = 0; i < tableModel.getRowCount(); i++) {
