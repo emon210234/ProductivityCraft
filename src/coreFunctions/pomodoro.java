@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JTextField;
 
 public class pomodoro extends JPanel implements ActionListener {
-    private JLabel timerLabel;
+    public JLabel timerLabel;
     private JButton startButton;
     private JButton pauseButton;
     private JButton resetButton;
@@ -78,7 +78,7 @@ public class pomodoro extends JPanel implements ActionListener {
         }
     }
 
-    private static class TimerThread extends Thread {
+    public static class TimerThread extends Thread {
         private JLabel timerLabel;
         private int minutes;
         private int seconds;
@@ -163,6 +163,7 @@ public class pomodoro extends JPanel implements ActionListener {
             running = true;
             updateTimerLabel();
         }
+        
     }
     public boolean isTimerThreadAlive() {
         return timerThread != null && timerThread.isAlive();
@@ -170,6 +171,9 @@ public class pomodoro extends JPanel implements ActionListener {
 
     public boolean isTimerThreadPaused() {
         return timerThread != null && timerThread.isPaused();
+    }
+    public String getCurrentTime() {
+        return timerLabel.getText();
     }
     
 }

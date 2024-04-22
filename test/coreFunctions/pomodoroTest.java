@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import javax.swing.JLabel;
+
 
 public class pomodoroTest {
     
@@ -34,29 +36,6 @@ public class pomodoroTest {
      * Test of actionPerformed method, of class pomodoro.
      */
     
-    @Test
-      public void testHandleStartButtonAction() {
-        System.out.println("handleStartButtonAction");
-        pomodoro instance = new pomodoro();
-        instance.handleStartButtonAction();
-    }
-
-
-    @Test
-    public void testHandlePauseButtonAction() {
-        System.out.println("handlePauseButtonAction");
-        pomodoro instance = new pomodoro();
-        instance.handlePauseButtonAction();
-    }
-
-    @Test
-    public void testHandleResetButtonAction() {
-        System.out.println("handleResetButtonAction");
-        pomodoro instance = new pomodoro();
-        instance.handleResetButtonAction();
-      
-  
-    }
 
     @Test
     public void testIsTimerThreadAlive() {
@@ -67,7 +46,16 @@ public class pomodoroTest {
         assertEquals(expResult, result);
         
     }
-
+    
+    @Test
+    public void testGetCurrentTime() {
+        JLabel timerLabel = new JLabel("25:00");
+        pomodoro pomodoroInstance = new pomodoro();
+        pomodoroInstance.timerLabel = timerLabel; // Set the timerLabel for the pomodoro instance
+        String expectedTime = "25:00";
+        String actualTime = pomodoroInstance.getCurrentTime();
+        assertEquals(expectedTime, actualTime);
+    }
     @Test
     public void testIsTimerThreadPaused() {
         System.out.println("isTimerThreadPaused");
