@@ -61,7 +61,11 @@ public class taskManagement extends JPanel {
         scrollPane.setBackground(new Color(220, 255, 220));
         add(scrollPane, BorderLayout.CENTER);
     }
-
+    
+    public int getNumberOfTasks() {
+        return tableModel.getRowCount();
+    }
+    
     private void createButtons() {
         addButton = guiManager.createButton("Add Task", e -> addTask());
         deleteButton = guiManager.createButton("Delete Task", e -> deleteTask());

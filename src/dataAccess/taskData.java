@@ -18,7 +18,10 @@ public class taskData {
             e.printStackTrace();
         }
     }
-
+    
+    public static int getTotalEntries(DefaultTableModel tableModel) {
+        return tableModel.getRowCount();
+    }
     public static void saveData(DefaultTableModel tableModel, String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (int i = 0; i < tableModel.getRowCount(); i++) {

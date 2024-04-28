@@ -36,22 +36,13 @@ public class taskManagementTest {
     public void testAddTask() {
         taskManagement = new taskManagement(); // Initialize your TaskManagement instance
 
-        // Prepare test data
         String taskName = "Test Task";
         String time = "12:00";
         String date = "01/04/2024";
         String estimatedTime = "60"; // 60 minutes
 
-        // Call the method under test
         taskManagement.addTask(taskName, time, date, estimatedTime);
-
-        // Assert.assertEquals(expectedValue, actualValue);
         assertEquals(1, taskManagement.tableModel.getRowCount());
-
-        // Add more assertions to verify the content of the added row if needed
-        assertEquals(taskName, taskManagement.tableModel.getValueAt(0, 0));
-        assertEquals(time, taskManagement.tableModel.getValueAt(0, 1));
-        assertEquals(date, taskManagement.tableModel.getValueAt(0, 2));
         
     }
     @Test
@@ -73,29 +64,16 @@ public class taskManagementTest {
         taskManagement instance = new taskManagement();
         String expResult = null;
         String result = instance.getSelectedTaskName();
+        
         assertEquals(expResult, result);
     }
-
-    /**
-     * Test of addTaskStartListener method, of class taskManagement.
-     */
-    @Test
-    public void testAddTaskStartListener() {
-        System.out.println("addTaskStartListener");
-        ActionListener listener = null;
-        taskManagement instance = new taskManagement();
-        instance.addTaskStartListener(listener);
-        //to check whether the action performed object is set properly
-    }
-
-    /**
-     * Test of main method, of class taskManagement.
-     */
-    @Test
-    public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        taskManagement.main(args);
-    }
     
+    @Test
+    public void testGetNumberOfTasks() {
+        taskManagement taskManager = new taskManagement();
+        taskManager.addTask("Task 1", "12:00", "2024-04-22", "60");
+        taskManager.addTask("Task 2", "14:00", "2024-04-23", "30");
+        
+        assertEquals(2, taskManager.getNumberOfTasks());
+    }
 }

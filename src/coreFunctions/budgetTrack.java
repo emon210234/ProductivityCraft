@@ -177,6 +177,12 @@ public class budgetTrack extends JPanel {
         }
         return total;
     }
+    
+    public double calculateBalance() {
+        double totalIncome = calculateTotal(incomeTableModel);
+        double totalExpense = calculateTotal(expenseTableModel);
+        return totalIncome - totalExpense;
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {

@@ -3,8 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/projects/ProductivityCraft/src/userAuth/loginController.java</file>
-            <file>file:/E:/projects/ProductivityCraft/src/interfaceWindows/logInFrame.java</file>
+            <file>file:/D:/p_craft/ProductivityCraft/test/coreFunctions/budgetTrackTest.java</file>
+            <file>file:/D:/p_craft/ProductivityCraft/src/dataAccess/budgetData.java</file>
+            <file>file:/D:/p_craft/ProductivityCraft/src/coreFunctions/taskManagement.java</file>
+            <file>file:/D:/p_craft/ProductivityCraft/test/coreFunctions/taskManagementTest.java</file>
+            <file>file:/D:/p_craft/ProductivityCraft/test/coreFunctions/pomodoroTest.java</file>
+            <file>file:/D:/p_craft/ProductivityCraft/src/dataAccess/taskData.java</file>
+            <file>file:/D:/p_craft/ProductivityCraft/src/coreFunctions/budgetTrack.java</file>
+            <file>file:/D:/p_craft/ProductivityCraft/test/dataAccess/budgetDataTest.java</file>
         </group>
     </open-files>
 </project-private>
